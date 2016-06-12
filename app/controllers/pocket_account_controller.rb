@@ -1,8 +1,16 @@
 class PocketAccountController < ApplicationController
+  def new
+  end
+
   def connect
-    @request_token = request_token
-    redirect_uri = 'create path?'
-    redirect_to "https://getpocket.com/auth/authorize?request_token=#{@request_token}&redirect_uri=#{redirect_uri}"
+    request_token = get_request_token
+    redirect_uri = 'http://goo.gl/C9Ly2F' ## http://localhost:3000/pocket-callback shortened
+
+    redirect_to "https://getpocket.com/auth/authorize?request_token=#{request_token}&redirect_uri=#{redirect_uri}"
+  end
+
+  def callback
+
   end
 
   def create
@@ -21,7 +29,7 @@ class PocketAccountController < ApplicationController
 
   private
 
-  def request_token
+  def get_request_token
     response = RestClient.post 'https://getpocket.com/v3/oauth/request', { consumer_key: '55347-09b806c0cb427299f30cb84d', redirect_uri: 'http://pudim.com.br' }
 
     # reponse format: "code=3c607e76-5786-4c3c-47ee-cc15ae"

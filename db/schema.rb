@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160609001901) do
+ActiveRecord::Schema.define(version: 20160612004255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20160609001901) do
     t.integer  "user_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.string   "code"
   end
 
   add_index "pocket_accounts", ["user_id"], name: "index_pocket_accounts_on_user_id", using: :btree
