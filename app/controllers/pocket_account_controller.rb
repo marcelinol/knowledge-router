@@ -5,12 +5,22 @@ class PocketAccountController < ApplicationController
   def connect
     request_token = get_request_token
     redirect_uri = 'http://goo.gl/C9Ly2F' ## http://localhost:3000/pocket-callback shortened
+    if current_user.pocket_account.present?
+      current_user.pocket_account.code = request_token
+    else
+      current_user.pocket_account = PocketAccount.create(user: current_user, code: request_token)
+    end
 
     redirect_to "https://getpocket.com/auth/authorize?request_token=#{request_token}&redirect_uri=#{redirect_uri}"
   end
 
   def callback
+    pocket_authorization_url = 'https://getpocket.com/v3/oauth/authorize'
+    request_token = current_user.pocket_account.code
 
+    response = RestClient.post pocket_authorization_url, { consumer_key: '55347-09b806c0cb427299f30cb84d', code: request_token }
+
+    current_user.pocket_account.access_token = response.match(/access_token=(.*)&/)[1]
   end
 
   def create
